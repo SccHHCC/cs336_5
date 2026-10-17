@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from importlib import import_module
 from typing import Any, Callable, Literal
 
 import torch
@@ -91,7 +92,7 @@ def run_compute_group_normalized_rewards(
 
 def run_compute_entropy(logits: torch.Tensor) -> torch.Tensor:
     """Get the entropy of the logits (i.e., entropy of the final dimension)."""
-    from cs336_alignment.sft_utils import compute_entropy
+    compute_entropy = import_module("learning.05_sft_practice").compute_entropy
     return compute_entropy(logits)
 
 
@@ -124,7 +125,7 @@ def run_get_response_log_probs(
                 we have not masked out the token indices corresponding to the prompt
                 or padding; that is done in the train loop.
     """
-    from cs336_alignment.sft_utils import get_response_log_probs
+    get_response_log_probs = import_module("learning.05_sft_practice").get_response_log_probs
     # 确保模型在正确的设备上并处于评估模式
     model.eval() 
     return get_response_log_probs(model, input_ids, labels, return_token_entropy)
@@ -238,7 +239,7 @@ def run_sft_microbatch_train_step(
 ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
     """Compute the policy gradient loss and backprop its gradients for a microbatch.
     """
-    from cs336_alignment.sft_utils import sft_microbatch_train_step
+    sft_microbatch_train_step = import_module("learning.05_sft_practice").sft_microbatch_train_step
     return sft_microbatch_train_step(
         policy_log_probs, 
         response_mask, 
@@ -319,7 +320,7 @@ def run_masked_normalize(
         torch.Tensor, the normalized sum, where masked elements
             (mask=0) don't contribute to the sum.
     """
-    from cs336_alignment.sft_utils import masked_normalize
+    masked_normalize = import_module("learning.05_sft_practice").masked_normalize
     return masked_normalize(tensor, mask, normalize_constant, dim=dim)
 
 
